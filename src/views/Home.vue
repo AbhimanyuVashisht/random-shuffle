@@ -1,9 +1,14 @@
 <template>
-  <div class="home">
-		<Card v-for="(obj, i) in b" :key="i" :name="obj.name" :room="obj.room">
-			{{obj.name}}
-		</Card>
-  </div>
+	<div class="home">
+		<b-container>
+			<b-row v-for="(o, i) in b" :key="i">
+				<b-col v-for="(obj, j) in o" :key="j">
+					<Card :name="obj.name" :room="obj.room" :team="obj.slot">
+					</Card>
+				</b-col>
+			</b-row>
+		</b-container>
+	</div>
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
@@ -27,32 +32,46 @@ export default class Home extends Vue {
 	}
 
 	process(n: any) {
-		for(let i = 1; i <= n; i++) {
+		for(let i = 0; i < n; i++) {
 			this.a.push(i);
 		}
-		this.b = this.a.sort(() => Math.random() - 0.5);
+		this.a = this.shuffle(this.a);
 		this.addRoomTag();
 	}
 
 	addRoomTag() {
-		const num1s = Math.floor(this.a.length/2);
+		const num1s = Math.ceil(this.a.length/2);
 		const num2s = this.a.length - num1s;
-		for (let i = 1; i <= num1s; i++) {
-			const indexOfEl = this.b.indexOf(this.a[i - 1]);
-			this.b[indexOfEl] = {
-				name: String.fromCharCode(64 + this.b[indexOfEl]),
-				room: 1
+		const R1 = this.a.slice(0, num1s);
+		const R2 = this.a.slice(num1s);
+		let slot = 1
+		for (const i in R1) {
+			R1[i] = {
+				name: String.fromCharCode(65 + R1[i]),
+				room: 1,
+				slot: slot
 			};
+			slot++;
 		}
-		for (let i = num1s + 1; i <= this.a.length; i++) {
-			const indexOfEl = this.b.indexOf(this.a[i - 1]);
-			this.b[indexOfEl] = {
-				name: String.fromCharCode(64 + this.b[indexOfEl]),
-				room: 2
+		slot = 1;
+		for (const i in R2) {
+			R2[i] = {
+				name: String.fromCharCode(65 + R2[i]),
+				room: 2,
+				slot: slot
 			};
+			slot++;
 		}
 		// this.b = this.b.sort(() => Math.random() - 0.5);
-		this.b = this.shuffle(this.b);
+		this.b = this.shuffle(R1.concat(R2));
+		const n = 5; //tweak this to add more items per line
+
+		const result = new Array(Math.ceil(this.b.length / n))
+		.fill(undefined, undefined, undefined)
+		.map(_ => this.b.splice(0, n))
+
+		this.b = result;
+
 	}
 	shuffle(arra1: Record<string, any>) {
 		let ctr = arra1.length, temp, index;
