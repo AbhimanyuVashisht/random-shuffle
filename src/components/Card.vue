@@ -4,7 +4,10 @@
 			<button @click.prevent="toggle=!toggle">{{name}}</button>
 		</div>
 		<div v-else class="room-div">
-			<strong><span style="color:red;">R</span> {{room}} <span style="color:blue;">T</span> {{team}}</strong>
+			<strong>
+				<!-- <span style="color:red;">R</span> {{room}}  -->
+				<span style="color:blue;">T</span> {{team}}
+			</strong>
 		</div>
 	</div>
 </template>

@@ -40,7 +40,8 @@ export default class Home extends Vue {
 	}
 
 	addRoomTag() {
-		const num1s = Math.ceil(this.a.length/2);
+		const num1s = this.a.length;
+		// const num1s = Math.ceil(this.a.length/2);
 		const num2s = this.a.length - num1s;
 		const R1 = this.a.slice(0, num1s);
 		const R2 = this.a.slice(num1s);
